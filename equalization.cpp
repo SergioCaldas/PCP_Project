@@ -5,7 +5,7 @@ using namespace cv;
 
 #define COL 256
 
-int histograma (Mat img){
+int *histograma (Mat img){
 	int i;
 	int hist[COL];
 	for (i=0;i<COL;i++){
@@ -24,7 +24,7 @@ int histograma (Mat img){
 		fprintf(fp,"%d,%d\n",i,hist[i]);	
 	}
 	fclose(fp);
-	return 1;
+	return hist;
 }
 
 int main (){
