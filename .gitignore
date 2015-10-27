@@ -1,3 +1,6 @@
 *.out
 CMakeFiles/**
 *.cmake
+Makefile
+.DS_Store
+CMakeCache.txt
