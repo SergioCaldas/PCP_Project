@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 2.8)
+project( equalization )
+find_package( OpenCV )
+include_directories( ${OpenCV_INCLUDE_DIRS} )
+add_executable( equalization equalization.cpp )
+target_link_libraries( equalization ${OpenCV_LIBS} )
