@@ -1,8 +1,0 @@
-Passos para compilar e executar
-
-1-) cmake .
-2-) make
-3-) ./equalization
-
-Spredsheet com histograma
-https://docs.google.com/spreadsheets/d/1Dry4c2Ic1wbZRYQQln5Vov8hOgmrZjyb-5OW9Kin8io/edit#gid=470453772
