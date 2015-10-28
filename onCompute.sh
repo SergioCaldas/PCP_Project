@@ -1,3 +1,3 @@
 module purge
-module load gnu/4.9.3
+module load gnu/4.9.0
 echo "pronto"
