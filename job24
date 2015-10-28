@@ -26,4 +26,8 @@
 
 #PBS -l nodes=1:ppn=24
 
-program_executable run.sh
+cd PCP_Project
+
+./onCompute.sh
+./run.sh
+
