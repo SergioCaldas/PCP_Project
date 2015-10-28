@@ -1,18 +1,24 @@
 #include <omp.h>
 #include <stdio.h>
 #include <cstdlib>
+#include <sys/time.h>
+
 
 #define COL_SIZE 3456
 #define LIN_SIZE 3456
 #define N_ELEMENTS 11943936
-#define MAX_THREADS 48
+#define MAX_THREADS 1
 #define HIST_SIZE 256
 #define TIME_RESOLUTION 1000000 // time measuring resolution (us)
 
+using namespace std;
+
+// globals
 int  histogram[HIST_SIZE];
 float acumulado[HIST_SIZE];
-
+timeval t;
 int  initial_image[COL_SIZE][LIN_SIZE] , final_image[COL_SIZE][LIN_SIZE];
+long long unsigned initial_time, final_time, duration;
 
 void fillMatrices (void) {
   for (unsigned i = 0; i < COL_SIZE; ++i) {
@@ -26,6 +32,23 @@ void clearCache(){
   double clearcache [30000000];
   for (unsigned i = 0; i < 30000000; ++i)
     clearcache[i] = i;
+}
+
+void writeResults (void) {
+  ofstream file ("timings.dat");
+    file << 0 << " " << duration << endl;
+  file.close();
+}
+
+void start (void) {
+  gettimeofday(&t, NULL);
+  initial_time = t.tv_sec * TIME_RESOLUTION + t.tv_usec;
+}
+
+void stop ( void ) {
+  gettimeofday(&t, NULL);
+  final_time = t.tv_sec * TIME_RESOLUTION + t.tv_usec;
+  duration =  final_time - initial_time;
 }
 
 void calcula_histograma ( void ){
@@ -65,12 +88,12 @@ void transforma_imagem( void ){
 int main () {
   fillMatrices();
   clearCache();
-  double initial_time = omp_get_wtime();
+  start();
   calcula_histograma();
   calcula_acumulado();
   transforma_imagem();
-  double final_time = omp_get_wtime();
-  printf("tempo de computação %.10f \n", final_time - initial_time );
+  stop();
+  writeResults();
   return 1;
 }
 
