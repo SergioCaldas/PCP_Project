@@ -1,6 +1,7 @@
 *.out
 CMakeFiles/**
 bin/**
+build/**
 *.cmake
 .DS_Store
 CMakeCache.txt
