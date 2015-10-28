@@ -1,8 +1,8 @@
 #include <omp.h>
-#include <stdio.h>
 #include <cstdlib>
 #include <sys/time.h>
-
+#include <iostream>
+#include <fstream>
 
 #define COL_SIZE 3456
 #define LIN_SIZE 3456
@@ -73,7 +73,6 @@ void calcula_acumulado ( void ){
   for ( unsigned i = 0 ; i < HIST_SIZE ; i++ ){
     valor_acumulado += histogram[i];
     acumulado[i] = valor_acumulado * 255.0f / N_ELEMENTS ;
-    printf("%d\n", (int) acumulado[i]);
   }
 }
 
