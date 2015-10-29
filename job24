@@ -27,7 +27,7 @@
 #PBS -l nodes=1:ppn=24
 
 module purge
-module load gnu/4.9.3
+module load gnu/4.9.0
 echo "Done Loading Modules..."
 
 cd PCP_Project
@@ -49,17 +49,76 @@ echo "Running 10 sequential..."
 ./bin/pcp_tp1_seq
 ./bin/pcp_tp1_seq
 
-echo "Running 10 parallel..."
-./bin/pcp_tp1_par
-./bin/pcp_tp1_par
-./bin/pcp_tp1_par
-./bin/pcp_tp1_par
-./bin/pcp_tp1_par
-./bin/pcp_tp1_par
-./bin/pcp_tp1_par
-./bin/pcp_tp1_par
-./bin/pcp_tp1_par
-./bin/pcp_tp1_par
+echo "Running 10 parallel (2 threads)..."
+./bin/pcp_tp1_par 2
+./bin/pcp_tp1_par 2
+./bin/pcp_tp1_par 2
+./bin/pcp_tp1_par 2
+./bin/pcp_tp1_par 2
+./bin/pcp_tp1_par 2
+./bin/pcp_tp1_par 2
+./bin/pcp_tp1_par 2
+./bin/pcp_tp1_par 2
+./bin/pcp_tp1_par 2
 
+echo "Running 10 parallel (4 threads)..."
+./bin/pcp_tp1_par 4
+./bin/pcp_tp1_par 4
+./bin/pcp_tp1_par 4
+./bin/pcp_tp1_par 4
+./bin/pcp_tp1_par 4
+./bin/pcp_tp1_par 4
+./bin/pcp_tp1_par 4
+./bin/pcp_tp1_par 4
+./bin/pcp_tp1_par 4
+./bin/pcp_tp1_par 4
+
+echo "Running 10 parallel (6 threads)..."
+./bin/pcp_tp1_par 6
+./bin/pcp_tp1_par 6
+./bin/pcp_tp1_par 6
+./bin/pcp_tp1_par 6
+./bin/pcp_tp1_par 6
+./bin/pcp_tp1_par 6
+./bin/pcp_tp1_par 6
+./bin/pcp_tp1_par 6
+./bin/pcp_tp1_par 6
+./bin/pcp_tp1_par 6
+
+echo "Running 10 parallel (8 threads)..."
+./bin/pcp_tp1_par 8
+./bin/pcp_tp1_par 8
+./bin/pcp_tp1_par 8
+./bin/pcp_tp1_par 8
+./bin/pcp_tp1_par 8
+./bin/pcp_tp1_par 8
+./bin/pcp_tp1_par 8
+./bin/pcp_tp1_par 8
+./bin/pcp_tp1_par 8
+./bin/pcp_tp1_par 8
+
+echo "Running 10 parallel (10 threads)..."
+./bin/pcp_tp1_par 10
+./bin/pcp_tp1_par 10
+./bin/pcp_tp1_par 10
+./bin/pcp_tp1_par 10
+./bin/pcp_tp1_par 10
+./bin/pcp_tp1_par 10
+./bin/pcp_tp1_par 10
+./bin/pcp_tp1_par 10
+./bin/pcp_tp1_par 10
+./bin/pcp_tp1_par 10
+
+echo "Running 10 parallel (12 threads)..."
+./bin/pcp_tp1_par 12
+./bin/pcp_tp1_par 12
+./bin/pcp_tp1_par 12
+./bin/pcp_tp1_par 12
+./bin/pcp_tp1_par 12
+./bin/pcp_tp1_par 12
+./bin/pcp_tp1_par 12
+./bin/pcp_tp1_par 12
+./bin/pcp_tp1_par 12
+./bin/pcp_tp1_par 12
 echo "Done..."
 
