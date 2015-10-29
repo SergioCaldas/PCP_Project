@@ -36,89 +36,24 @@ echo "Compiling..."
 make clean
 make
 
-echo "Running 10 sequential..."
-./bin/pcp_tp1_seq
-./bin/pcp_tp1_seq
-./bin/pcp_tp1_seq
-./bin/pcp_tp1_seq
-./bin/pcp_tp1_seq
-./bin/pcp_tp1_seq
-./bin/pcp_tp1_seq
-./bin/pcp_tp1_seq
-./bin/pcp_tp1_seq
-./bin/pcp_tp1_seq
-./bin/pcp_tp1_seq
 
-echo "Running 10 parallel (2 threads)..."
-./bin/pcp_tp1_par 2
-./bin/pcp_tp1_par 2
-./bin/pcp_tp1_par 2
-./bin/pcp_tp1_par 2
-./bin/pcp_tp1_par 2
-./bin/pcp_tp1_par 2
-./bin/pcp_tp1_par 2
-./bin/pcp_tp1_par 2
-./bin/pcp_tp1_par 2
-./bin/pcp_tp1_par 2
+max_ppn=24
+sample_size=2
 
-echo "Running 10 parallel (4 threads)..."
-./bin/pcp_tp1_par 4
-./bin/pcp_tp1_par 4
-./bin/pcp_tp1_par 4
-./bin/pcp_tp1_par 4
-./bin/pcp_tp1_par 4
-./bin/pcp_tp1_par 4
-./bin/pcp_tp1_par 4
-./bin/pcp_tp1_par 4
-./bin/pcp_tp1_par 4
-./bin/pcp_tp1_par 4
+echo "Running $sample_size * sequential code"
+for (( seq_num=1; seq_num <= $sample_size; ++seq_num ))
+do
+	./bin/pcp_tp1_seq
+done
 
-echo "Running 10 parallel (6 threads)..."
-./bin/pcp_tp1_par 6
-./bin/pcp_tp1_par 6
-./bin/pcp_tp1_par 6
-./bin/pcp_tp1_par 6
-./bin/pcp_tp1_par 6
-./bin/pcp_tp1_par 6
-./bin/pcp_tp1_par 6
-./bin/pcp_tp1_par 6
-./bin/pcp_tp1_par 6
-./bin/pcp_tp1_par 6
+for (( i=2; i <= $max_ppn; ++i ))
+do
+	echo "Running $sample_size * ( $i threads parallel code)"
+	for (( sample_num=1; sample_num <= $sample_size; ++sample_num ))
+	do 
+		./bin/pcp_tp1_par $i
+	done
+done
 
-echo "Running 10 parallel (8 threads)..."
-./bin/pcp_tp1_par 8
-./bin/pcp_tp1_par 8
-./bin/pcp_tp1_par 8
-./bin/pcp_tp1_par 8
-./bin/pcp_tp1_par 8
-./bin/pcp_tp1_par 8
-./bin/pcp_tp1_par 8
-./bin/pcp_tp1_par 8
-./bin/pcp_tp1_par 8
-./bin/pcp_tp1_par 8
-
-echo "Running 10 parallel (10 threads)..."
-./bin/pcp_tp1_par 10
-./bin/pcp_tp1_par 10
-./bin/pcp_tp1_par 10
-./bin/pcp_tp1_par 10
-./bin/pcp_tp1_par 10
-./bin/pcp_tp1_par 10
-./bin/pcp_tp1_par 10
-./bin/pcp_tp1_par 10
-./bin/pcp_tp1_par 10
-./bin/pcp_tp1_par 10
-
-echo "Running 10 parallel (12 threads)..."
-./bin/pcp_tp1_par 12
-./bin/pcp_tp1_par 12
-./bin/pcp_tp1_par 12
-./bin/pcp_tp1_par 12
-./bin/pcp_tp1_par 12
-./bin/pcp_tp1_par 12
-./bin/pcp_tp1_par 12
-./bin/pcp_tp1_par 12
-./bin/pcp_tp1_par 12
-./bin/pcp_tp1_par 12
 echo "Done..."
 
