@@ -70,8 +70,11 @@ void calcula_acumulado ( long long int total_pixels  ){
 	}
 }
 
-void transforma_imagem( long long int total_pixels ){
-#pragma omp for schedule (static)
+void transforma_imagem( long long int total_pixels , int thread_count  ){
+#pragma omp parallel num_threads( thread_count ) default(none) \
+private(total_pixels ,  acumulado, initial_image) \
+shared(final_image) 
+#pragma omp for nowait 
 	for (long long int pixel_number = 0; pixel_number < total_pixels; ++pixel_number) {
 		final_image[pixel_number] = (int )( acumulado[ initial_image[pixel_number]] );
 	} 
@@ -88,12 +91,10 @@ int main (int argc, char *argv[]) {
 		if (number_threads > MAX_THREADS ){
 			number_threads = MAX_THREADS;
 		}
-		omp_set_num_threads( number_threads );
 		start();
 		calcula_histograma( total_pixels );
 		calcula_acumulado( total_pixels );
-		transforma_imagem( total_pixels );
-#pragma omp single
+		transforma_imagem( total_pixels , number_threads );
 		stop();
 		writeResults(number_threads);
 		return 0;

@@ -39,11 +39,12 @@ make
 
 max_ppn=24
 sample_size=2
+matrix_size=8192
 
 echo "Running $sample_size * sequential code"
 for (( seq_num=1; seq_num <= $sample_size; ++seq_num ))
 do
-	./bin/pcp_tp1_seq
+	./bin/pcp_tp1_seq $matrix_size $matrix_size
 done
 
 for (( i=2; i <= $max_ppn; ++i ))
@@ -51,7 +52,7 @@ do
 	echo "Running $sample_size * ( $i threads parallel code)"
 	for (( sample_num=1; sample_num <= $sample_size; ++sample_num ))
 	do 
-		./bin/pcp_tp1_par $i
+		./bin/pcp_tp1_par $i $matrix_size $matrix_size
 	done
 done
 

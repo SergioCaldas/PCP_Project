@@ -4,9 +4,6 @@
 #include <iostream>
 #include <fstream>
 
-#define COL_SIZE 3456
-#define LIN_SIZE 3456
-#define N_ELEMENTS 11943936
 #define HIST_SIZE 256
 #define TIME_RESOLUTION 1000000 // time measuring resolution (us)
 
@@ -16,14 +13,21 @@ using namespace std;
 int  histogram[HIST_SIZE];
 float acumulado[HIST_SIZE];
 timeval t;
-int  initial_image[COL_SIZE][LIN_SIZE] , final_image[COL_SIZE][LIN_SIZE];
+long long int * initial_image, * final_image;
 long long unsigned initial_time, final_time, duration;
 
-void fillMatrices (void) {
-	for (unsigned i = 0; i < COL_SIZE; ++i) {
-		for (unsigned j = 0; j < LIN_SIZE; ++j) {
-			initial_image[i][j] = (((int) rand()) % ((int) 255));
-		}
+void fillMatrices ( long long int total_pixels  ) {
+
+	initial_image = (long long int*) malloc(total_pixels * sizeof ( long long int ) );
+	final_image = (long long int*) malloc(total_pixels * sizeof ( long long int ) );
+
+	for (long long int pixel_number = 0; pixel_number < total_pixels; ++pixel_number) {
+		initial_image[pixel_number] = (((int) rand()) % ((int) 255));
+	}
+
+	for ( unsigned  pos = 0; pos < HIST_SIZE ; pos++ ){
+		histogram[pos]=0;
+		acumulado[pos] = 0.0f;
 	}
 }
 
@@ -33,9 +37,9 @@ void clearCache(){
 		clearcache[i] = i;
 }
 
-void writeResults (void) {
+void writeResults (int number_threads) {
 	ofstream file ("timing/timings.dat" , ios::out | ios::app );
-	file << 0 << " " << duration << endl;
+	file << number_threads << " " << duration << endl;
 	file.close();
 }
 
@@ -50,48 +54,44 @@ void stop ( void ) {
 	duration =  final_time - initial_time;
 }
 
-void calcula_histograma ( void ){
-
-	for ( unsigned  pos = 0; pos < HIST_SIZE ; pos++ ){
-		histogram[pos]=0;
-	}
-
-	for (unsigned col=0; col < COL_SIZE; ++col){
-		for (unsigned linha=0; linha < LIN_SIZE; ++linha){
-			histogram[(initial_image[col][linha])]++;
-		}
-	}
+void calcula_histograma ( long long int total_pixels  ){
+	for (long long int pixel_number = 0; pixel_number < total_pixels; ++pixel_number) {
+		histogram[ initial_image[pixel_number] ]++;
+	} 
 }
 
-void calcula_acumulado ( void ){
+void calcula_acumulado ( long long int total_pixels  ){
 
-	for ( unsigned pos = 0; pos < HIST_SIZE ; pos++ ){
-		acumulado[pos] = 0.0f;
-	}
 	int valor_acumulado = 0;
 	for ( unsigned i = 0 ; i < HIST_SIZE ; i++ ){
 		valor_acumulado += histogram[i];
-		acumulado[i] = valor_acumulado * 255.0f / N_ELEMENTS ;
+		acumulado[i] = valor_acumulado * 255.0f / total_pixels ;
 	}
 }
 
-void transforma_imagem( void ){
-	for ( unsigned col=0; col < COL_SIZE ; ++col ){
-		for ( unsigned linha ; linha < LIN_SIZE; ++linha ){
-			final_image[col][linha] = ( int ) ( acumulado[ initial_image[col][linha]] );
-		}
-	}
+void transforma_imagem( long long int total_pixels ){
+	for (long long int pixel_number = 0; pixel_number < total_pixels; ++pixel_number) {
+		final_image[pixel_number] = (int )( acumulado[ initial_image[pixel_number]] );
+	} 
 }
 
-int main () {
-	fillMatrices();
-	clearCache();
-	start();
-	calcula_histograma();
-	calcula_acumulado();
-	transforma_imagem();
-	stop();
-	writeResults();
-	return 1;
+int main (int argc, char *argv[]) {
+	if ( argc > 2 ){
+		int rows = atoi(argv[1]);
+		int columns = atoi(argv[2]);
+		long long int total_pixels = rows * columns;
+		fillMatrices(total_pixels);
+		clearCache();
+		start();
+		calcula_histograma( total_pixels );
+		calcula_acumulado( total_pixels );
+		transforma_imagem( total_pixels );
+		stop();
+		writeResults( 0 );
+		return 0;
+	}
+	else {
+		return 1;
+	}
 }
 
