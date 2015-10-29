@@ -49,7 +49,7 @@ $(BIN_DIR)/$(BIN_PAR): $(BUILD_DIR)/$(PAR).o $(BUILD_DIR)/$(PAR).d
 checkdirs:
 	@mkdir -p build 
 	@mkdir -p src
-	@mkdir -p timings
+	@mkdir -p timing
 	@mkdir -p bin
 
 all: checkdirs  $(BIN_DIR)/$(BIN_SEQ) $(BIN_DIR)/$(BIN_PAR)
