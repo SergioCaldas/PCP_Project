@@ -40,49 +40,56 @@ void clearCache(){
 }
 
 void writeResults (int number_threads) {
-        ofstream file ("timing/timings.dat" , ios::out | ios::app );
-        file << number_threads << " , " << hist_duration << " , " << accum_duration << " , "<< transform_duration << " , " << total_duration << endl;
-        file.close();
+	ofstream file ("timing/timings.dat" , ios::out | ios::app );
+	file << number_threads << " , " << hist_duration << " , " << accum_duration << " , "<< transform_duration << " , " << total_duration << endl;
+	file.close();
 }
 
 void start (void) {
-        gettimeofday(&t, NULL);
-        initial_time = t.tv_sec * TIME_RESOLUTION + t.tv_usec;
+	gettimeofday(&t, NULL);
+	initial_time = t.tv_sec * TIME_RESOLUTION + t.tv_usec;
 }
 
 void mark_time ( int break_num ) {
-        gettimeofday(&t, NULL);
-        temporary_time = t.tv_sec * TIME_RESOLUTION + t.tv_usec;
-        if ( break_num == 1 ){
-                hist_time = temporary_time;
-        } else if ( break_num == 2 ){
-                accum_time = temporary_time;
-        }
-        else if ( break_num == 3 ){
-                transform_time = temporary_time;
-        }
+	gettimeofday(&t, NULL);
+	temporary_time = t.tv_sec * TIME_RESOLUTION + t.tv_usec;
+	if ( break_num == 1 ){
+		hist_time = temporary_time;
+	} else if ( break_num == 2 ){
+		accum_time = temporary_time;
+	}
+	else if ( break_num == 3 ){
+		transform_time = temporary_time;
+	}
 }
 
 void stop ( void ) {
-        gettimeofday(&t, NULL);
-        final_time = t.tv_sec * TIME_RESOLUTION + t.tv_usec;
-        hist_duration = hist_time - initial_time;
-        accum_duration = accum_time - hist_time;
-        transform_duration = transform_time - accum_time;
-        total_duration =  final_time - initial_time;
+	gettimeofday(&t, NULL);
+	final_time = t.tv_sec * TIME_RESOLUTION + t.tv_usec;
+	hist_duration = hist_time - initial_time;
+	accum_duration = accum_time - hist_time;
+	transform_duration = transform_time - accum_time;
+	total_duration =  final_time - initial_time;
 }
 
 void calcula_histograma ( long long int total_pixels , int thread_count ){
 #pragma omp parallel num_threads( thread_count ) 
+	{
+		int thread_id = omp_get_thread_num();
+		int local_histogram[MAX_THREADS][HIST_SIZE];
 #pragma omp for nowait 
-	for (long long int pixel_number = 0; pixel_number < total_pixels; ++pixel_number) {
-		#pragma omp atomic 
-		histogram[ initial_image[pixel_number] ]++;
-	} 
+		for (long long int pixel_number = 0; pixel_number < total_pixels; ++pixel_number) { 
+			local_histogram[thread_id][ initial_image[pixel_number] ]++;
+		} 
+		for ( unsigned pos_hist_local = 0; pos_hist_local < HIST_SIZE; ++pos_hist_local ){
+#pragma omp atomic 
+			histogram[pos_hist_local]+= local_histogram[thread_id][pos_hist_local];
+		}
+	}
 }
 
 void calcula_acumulado ( long long int total_pixels  ){
-int valor_acumulado = 0;
+	int valor_acumulado = 0;
 	for ( unsigned i = 0 ; i < HIST_SIZE ; i++ ){
 		valor_acumulado += histogram[i];
 		acumulado[i] = valor_acumulado * 255.0f / total_pixels ;
