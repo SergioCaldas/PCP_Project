@@ -26,8 +26,40 @@
 
 #PBS -l nodes=1:ppn=24
 
+module purge
+module load gnu/4.9.3
+echo "Done Loading Modules..."
+
 cd PCP_Project
 
-./onCompute.sh
-./run.sh
+echo "Compiling..."
+make clean
+make
+
+echo "Running 10 sequential..."
+./bin/pcp_tp1_seq
+./bin/pcp_tp1_seq
+./bin/pcp_tp1_seq
+./bin/pcp_tp1_seq
+./bin/pcp_tp1_seq
+./bin/pcp_tp1_seq
+./bin/pcp_tp1_seq
+./bin/pcp_tp1_seq
+./bin/pcp_tp1_seq
+./bin/pcp_tp1_seq
+./bin/pcp_tp1_seq
+
+echo "Running 10 parallel..."
+./bin/pcp_tp1_par
+./bin/pcp_tp1_par
+./bin/pcp_tp1_par
+./bin/pcp_tp1_par
+./bin/pcp_tp1_par
+./bin/pcp_tp1_par
+./bin/pcp_tp1_par
+./bin/pcp_tp1_par
+./bin/pcp_tp1_par
+./bin/pcp_tp1_par
+
+echo "Done..."
 

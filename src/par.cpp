@@ -35,7 +35,7 @@ void clearCache(){
 }
 
 void writeResults (void) {
-  ofstream file ("timings/timings.dat");
+  ofstream file ("timing/timings.dat");
     file << 0 << " " << duration << endl;
   file.close();
 }
