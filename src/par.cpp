@@ -72,14 +72,17 @@ void stop ( void ) {
         total_duration =  final_time - initial_time;
 }
 
-void calcula_histograma ( long long int total_pixels  ){
+void calcula_histograma ( long long int total_pixels , int thread_count ){
+#pragma omp parallel num_threads( thread_count ) 
+#pragma omp for nowait 
 	for (long long int pixel_number = 0; pixel_number < total_pixels; ++pixel_number) {
+		#pragma omp atomic 
 		histogram[ initial_image[pixel_number] ]++;
 	} 
 }
 
 void calcula_acumulado ( long long int total_pixels  ){
-	int valor_acumulado = 0;
+int valor_acumulado = 0;
 	for ( unsigned i = 0 ; i < HIST_SIZE ; i++ ){
 		valor_acumulado += histogram[i];
 		acumulado[i] = valor_acumulado * 255.0f / total_pixels ;
@@ -106,7 +109,7 @@ int main (int argc, char *argv[]) {
 			number_threads = MAX_THREADS;
 		}
 		start();
-		calcula_histograma( total_pixels );
+		calcula_histograma( total_pixels , number_threads );
 		mark_time(1);
 		calcula_acumulado( total_pixels );
 		mark_time(2);
