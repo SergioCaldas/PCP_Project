@@ -56,7 +56,7 @@ void calcula_histograma ( void ){
 	for ( unsigned  pos = 0; pos < HIST_SIZE ; pos++ ){
 		histogram[pos]=0;
 	}
-	#pragma omp for 
+	#pragma omp parallel for 
 	for (unsigned col=0; col < COL_SIZE; ++col){
 		for (unsigned linha=0; linha < LIN_SIZE; ++linha){
 			histogram[(initial_image[col][linha])]++;
@@ -70,7 +70,7 @@ void calcula_acumulado ( void ){
 		acumulado[pos] = 0.0f;
 	}
 	int valor_acumulado = 0;
-	#pragma omp for
+	#pragma omp parallel for
 	for ( unsigned i = 0 ; i < HIST_SIZE ; i++ ){
 		valor_acumulado += histogram[i];
 		acumulado[i] = valor_acumulado * 255.0f / N_ELEMENTS ;
@@ -78,7 +78,8 @@ void calcula_acumulado ( void ){
 }
 
 void transforma_imagem( void ){
-	#pragma omp for
+    	#pragma omp barrier
+	#pragma omp parallel for
 	for ( unsigned col=0; col < COL_SIZE ; ++col ){
 		for ( unsigned linha = 0 ; linha < LIN_SIZE; ++linha ){
 			final_image[col][linha] = ( int ) ( acumulado[ initial_image[col][linha]] );
@@ -94,8 +95,6 @@ int main (int argc, char *argv[]) {
 		if (number_threads > MAX_THREADS ){
 			number_threads = MAX_THREADS;
 		}
-		#pragma omp parallel
-		 {
 		omp_set_num_threads( number_threads );
 		start();
 		calcula_histograma();
@@ -103,7 +102,6 @@ int main (int argc, char *argv[]) {
 		transforma_imagem();
 		stop();
 		writeResults(number_threads);
-		}
 		return 0;
 	}
 	else {
