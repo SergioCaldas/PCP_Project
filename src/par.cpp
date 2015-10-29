@@ -15,7 +15,8 @@ int  histogram[HIST_SIZE];
 float acumulado[HIST_SIZE];
 timeval t;
 long long int * initial_image, * final_image;
-long long unsigned initial_time, final_time, duration;
+long long unsigned initial_time, final_time, hist_time, accum_time, transform_time, temporary_time;
+long long unsigned hist_duration, accum_duration, transform_duration, total_duration;
 
 void fillMatrices ( long long int total_pixels  ) {
 
@@ -39,20 +40,36 @@ void clearCache(){
 }
 
 void writeResults (int number_threads) {
-	ofstream file ("timing/timings.dat" , ios::out | ios::app );
-	file << number_threads << " " << duration << endl;
-	file.close();
+        ofstream file ("timing/timings.dat" , ios::out | ios::app );
+        file << number_threads << " , " << hist_duration << " , " << accum_duration << " , "<< transform_duration << " , " << total_duration << endl;
+        file.close();
 }
 
 void start (void) {
-	gettimeofday(&t, NULL);
-	initial_time = t.tv_sec * TIME_RESOLUTION + t.tv_usec;
+        gettimeofday(&t, NULL);
+        initial_time = t.tv_sec * TIME_RESOLUTION + t.tv_usec;
+}
+
+void mark_time ( int break_num ) {
+        gettimeofday(&t, NULL);
+        temporary_time = t.tv_sec * TIME_RESOLUTION + t.tv_usec;
+        if ( break_num == 1 ){
+                hist_time = temporary_time;
+        } else if ( break_num == 2 ){
+                accum_time = temporary_time;
+        }
+        else if ( break_num == 3 ){
+                transform_time = temporary_time;
+        }
 }
 
 void stop ( void ) {
-	gettimeofday(&t, NULL);
-	final_time = t.tv_sec * TIME_RESOLUTION + t.tv_usec;
-	duration =  final_time - initial_time;
+        gettimeofday(&t, NULL);
+        final_time = t.tv_sec * TIME_RESOLUTION + t.tv_usec;
+        hist_duration = hist_time - initial_time;
+        accum_duration = accum_time - hist_time;
+        transform_duration = transform_time - accum_time;
+        total_duration =  final_time - initial_time;
 }
 
 void calcula_histograma ( long long int total_pixels  ){
@@ -62,7 +79,6 @@ void calcula_histograma ( long long int total_pixels  ){
 }
 
 void calcula_acumulado ( long long int total_pixels  ){
-
 	int valor_acumulado = 0;
 	for ( unsigned i = 0 ; i < HIST_SIZE ; i++ ){
 		valor_acumulado += histogram[i];
@@ -91,8 +107,11 @@ int main (int argc, char *argv[]) {
 		}
 		start();
 		calcula_histograma( total_pixels );
+		mark_time(1);
 		calcula_acumulado( total_pixels );
+		mark_time(2);
 		transforma_imagem( total_pixels , number_threads );
+		mark_time(3);
 		stop();
 		writeResults(number_threads);
 		return 0;
