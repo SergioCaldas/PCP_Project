@@ -10,7 +10,7 @@
 #          after the first executable statement are ignored.
 
 #PBS -N pcp_tp1
-#PBS -l walltime=00:15:00
+#PBS -l walltime=00:10:00
 #PBS -q mei
 
 #          PBS can send informative email messages to you about the
@@ -28,21 +28,23 @@
 #          Specify the number of nodes requested and the
 #          number of processors per node. 
 
-#PBS -l nodes=1:ppn=16
+#PBS -l nodes=1:ppn=24
 
 module purge
 module load gnu/4.9.0
-module load gnu/4.9.3
+   
 echo "Done Loading Modules..."
 
 cd PCP_Project
+make clean
+make
 
 read -r node_info<$PBS_NODEFILE
 
 echo "Allocated computing node: $node_info"
 
 max_ppn=16
-sample_size=5
+sample_size=2
 max_matrix=8192
 
 for (( matrix_size=4096;matrix_size <= $max_matrix; matrix_size+=matrix_size  ))

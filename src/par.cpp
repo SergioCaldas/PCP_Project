@@ -78,7 +78,7 @@ void calcula_histograma ( long long int total_pixels , int thread_count ){
 	{
 		int thread_id = omp_get_thread_num();
 		int local_histogram[MAX_THREADS][HIST_SIZE];
-#pragma omp for nowait schedule (static) 
+#pragma omp for nowait schedule (static)
 		for (long long int pixel_number = 0; pixel_number < total_pixels; ++pixel_number) { 
 			local_histogram[thread_id][ initial_image[pixel_number] ]++;
 		} 
@@ -100,10 +100,9 @@ void calcula_acumulado ( long long int total_pixels  ){
 void transforma_imagem( long long int total_pixels , int thread_count  ){
 #pragma omp parallel num_threads( thread_count ) 
 {
-#pragma omp for nowait schedule (static) 
-	for (long long int pixel_number = 0; pixel_number < total_pixels; pixel_number+=2 ) {
+#pragma omp for nowait schedule (static)
+	for (long long int pixel_number = 0; pixel_number < total_pixels; ++pixel_number ) {
 		final_image[pixel_number] = (int )( acumulado[ initial_image[pixel_number]] );
-                final_image[pixel_number+1] = (int )( acumulado[ initial_image[pixel_number+1]] );	
 }
 } 
 }

@@ -7,15 +7,15 @@
 SHELL = /bin/sh
 
 PAR = par
-CXX = icpc
-LD  = icpc
+CXX = g++
+LD  = g++
 
 SEQ = seq
 BIN = bin
 BIN_SEQ = pcp_tp1_seq
 BIN_PAR = pcp_tp1_par
 
-CXXFLAGS   = -O3 -Wall -Wextra -std=c++11 -fopenmp -vec-report3
+CXXFLAGS   = -O3 -Wall -Wextra -std=c++11 -fopenmp
 
 SRC_DIR = src
 BIN_DIR = bin
