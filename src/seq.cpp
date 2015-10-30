@@ -40,10 +40,9 @@ void clearCache(){
 		clearcache[i] = i;
 }
 
-void writeResults (int number_threads , char * node_name ) {
+void writeResults (int number_threads , int rows, int columns ,  char * node_name ) {
 	ofstream file ("timing/timings.dat" , ios::out | ios::app );
-
-	file << number_threads << " , " << hist_duration << " , " << accum_duration << " , "<< transform_duration << " , " << total_duration << " , " << node_name <<endl;
+	file << number_threads << " , " << hist_duration << " , " << accum_duration << " , "<< transform_duration << " , " << total_duration << " , " << rows <<" x "<<  columns  <<" , " << node_name << endl;
 	file.close();
 }
 
@@ -115,7 +114,7 @@ int main (int argc, char *argv[]) {
 		transforma_imagem( total_pixels );
 		mark_time(3);		
 		stop();
-		writeResults( 0 , node_name );
+		writeResults( 0 , rows, columns , node_name );
 		return 0;
 	}
 	else {

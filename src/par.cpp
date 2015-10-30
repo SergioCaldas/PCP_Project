@@ -40,11 +40,10 @@ void clearCache(){
 		clearcache[i] = i;
 }
 
-void writeResults (int number_threads , char * node_name ) {
-	ofstream file ("timing/timings.dat" , ios::out | ios::app );
-
-	file << number_threads << " , " << hist_duration << " , " << accum_duration << " , "<< transform_duration << " , " << total_duration << " , " << node_name <<endl;
-	file.close();
+void writeResults (int number_threads , int rows, int columns ,  char * node_name ) {
+        ofstream file ("timing/timings.dat" , ios::out | ios::app );
+        file << number_threads << " , " << hist_duration << " , " << accum_duration << " , "<< transform_duration << " , " << total_duration << " , " << rows <<" x "<<  columns  <<" , " << node_name << endl;
+        file.close();
 }
 
 void start (void) {
@@ -79,7 +78,7 @@ void calcula_histograma ( long long int total_pixels , int thread_count ){
 	{
 		int thread_id = omp_get_thread_num();
 		int local_histogram[MAX_THREADS][HIST_SIZE];
-#pragma omp for nowait schedule (static)
+#pragma omp for nowait schedule (static) 
 		for (long long int pixel_number = 0; pixel_number < total_pixels; ++pixel_number) { 
 			local_histogram[thread_id][ initial_image[pixel_number] ]++;
 		} 
@@ -100,10 +99,13 @@ void calcula_acumulado ( long long int total_pixels  ){
 
 void transforma_imagem( long long int total_pixels , int thread_count  ){
 #pragma omp parallel num_threads( thread_count ) 
-#pragma omp for nowait schedule (static)
-	for (long long int pixel_number = 0; pixel_number < total_pixels; ++pixel_number) {
+{
+#pragma omp for nowait schedule (static) 
+	for (long long int pixel_number = 0; pixel_number < total_pixels; pixel_number+=2 ) {
 		final_image[pixel_number] = (int )( acumulado[ initial_image[pixel_number]] );
-	} 
+                final_image[pixel_number+1] = (int )( acumulado[ initial_image[pixel_number+1]] );	
+}
+} 
 }
 
 int main (int argc, char *argv[]) {
@@ -129,7 +131,7 @@ int main (int argc, char *argv[]) {
 		transforma_imagem( total_pixels , number_threads );
 		mark_time(3);
 		stop();
-		writeResults(number_threads , node_name );
+		writeResults(number_threads , rows, columns, node_name );
 		return 0;
 	}
 	else {
