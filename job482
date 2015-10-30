@@ -10,7 +10,7 @@
 #          after the first executable statement are ignored.
 
 #PBS -N pcp_tp1
-#PBS -l walltime=00:15:00
+#PBS -l walltime=00:05:00
 #PBS -q mei
 
 #          PBS can send informative email messages to you about the
@@ -44,13 +44,10 @@ read -r node_info<$PBS_NODEFILE
 
 echo "Allocated computing node: $node_info"
 
-max_ppn=4
-sample_size=1
-max_matrix=16384
+max_ppn=24
+sample_size=5
+matrix_size=8192
 
-for (( matrix_size=4096;matrix_size <= $max_matrix; matrix_size+=matrix_size  ))
-do 
-echo "Matrix Size: $matrix_size"
 echo "Running $sample_size * sequential code"
 for (( seq_num=1; seq_num <= $sample_size; ++seq_num ))
 do
@@ -65,6 +62,6 @@ do
 		./bin/pcp_tp1_par $i $matrix_size $matrix_size $node_info
 	done
 done
-done
+
 echo "Done..."
 
