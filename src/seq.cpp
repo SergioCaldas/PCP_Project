@@ -3,6 +3,8 @@
 #include <sys/time.h>
 #include <iostream>
 #include <fstream>
+#include <string.h>
+
 
 #define HIST_SIZE 256
 #define TIME_RESOLUTION 1000000 // time measuring resolution (us)
@@ -38,10 +40,10 @@ void clearCache(){
 		clearcache[i] = i;
 }
 
-void writeResults (int number_threads) {
+void writeResults (int number_threads , char * node_name ) {
 	ofstream file ("timing/timings.dat" , ios::out | ios::app );
 
-	file << number_threads << " , " << hist_duration << " , " << accum_duration << " , "<< transform_duration << " , " << total_duration << endl;
+	file << number_threads << " , " << hist_duration << " , " << accum_duration << " , "<< transform_duration << " , " << total_duration << " , " << node_name <<endl;
 	file.close();
 }
 
@@ -99,7 +101,11 @@ int main (int argc, char *argv[]) {
 		int rows = atoi(argv[1]);
 		int columns = atoi(argv[2]);
 		long long int total_pixels = rows * columns;
+		char node_name[40];
 		fillMatrices(total_pixels);
+		if (argc >3 ){
+			    strcpy (node_name,argv[3]);
+		}
 		clearCache();
 		start();
 		calcula_histograma( total_pixels );
@@ -109,7 +115,7 @@ int main (int argc, char *argv[]) {
 		transforma_imagem( total_pixels );
 		mark_time(3);		
 		stop();
-		writeResults( 0 );
+		writeResults( 0 , node_name );
 		return 0;
 	}
 	else {

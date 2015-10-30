@@ -1,3 +1,7 @@
+## FICHEIRO MODELO PBS CRIADO PARA A DISCIPLINA DE CPD::PCP
+## GRUPO : FILIPE OLIVEIRA E SERGIO CALDAS
+## OUT/2015
+
 #!/bin/sh
 
 #          Remarks: A line beginning with # is a comment.
@@ -36,23 +40,26 @@ echo "Compiling..."
 make clean
 make
 
+read -r node_info<$PBS_NODEFILE
+
+echo "Allocated computing node: $node_info"
 
 max_ppn=24
-sample_size=2
+sample_size=5
 matrix_size=8192
 
 echo "Running $sample_size * sequential code"
 for (( seq_num=1; seq_num <= $sample_size; ++seq_num ))
 do
-	./bin/pcp_tp1_seq $matrix_size $matrix_size
+	./bin/pcp_tp1_seq $matrix_size $matrix_size $node_info
 done
 
-for (( i=2; i <= $max_ppn; ++i ))
+for (( i=1; i <= $max_ppn; ++i ))
 do
 	echo "Running $sample_size * ( $i threads parallel code)"
 	for (( sample_num=1; sample_num <= $sample_size; ++sample_num ))
 	do 
-		./bin/pcp_tp1_par $i $matrix_size $matrix_size
+		./bin/pcp_tp1_par $i $matrix_size $matrix_size $node_info
 	done
 done
 

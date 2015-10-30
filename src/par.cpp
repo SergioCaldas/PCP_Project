@@ -3,6 +3,7 @@
 #include <sys/time.h>
 #include <iostream>
 #include <fstream>
+#include <string.h>
 
 #define MAX_THREADS 48
 #define HIST_SIZE 256
@@ -39,9 +40,10 @@ void clearCache(){
 		clearcache[i] = i;
 }
 
-void writeResults (int number_threads) {
+void writeResults (int number_threads , char * node_name ) {
 	ofstream file ("timing/timings.dat" , ios::out | ios::app );
-	file << number_threads << " , " << hist_duration << " , " << accum_duration << " , "<< transform_duration << " , " << total_duration << endl;
+
+	file << number_threads << " , " << hist_duration << " , " << accum_duration << " , "<< transform_duration << " , " << total_duration << " , " << node_name <<endl;
 	file.close();
 }
 
@@ -110,11 +112,15 @@ int main (int argc, char *argv[]) {
 		int rows = atoi(argv[2]);
 		int columns = atoi(argv[3]);
 		long long int total_pixels = rows * columns;
-		fillMatrices(total_pixels);
-		clearCache();
+		char node_name[40];
+		if (argc > 4 ){
+			strcpy (node_name,argv[4]);
+		}	
 		if (number_threads > MAX_THREADS ){
 			number_threads = MAX_THREADS;
-		}
+		}	
+		fillMatrices(total_pixels);
+		clearCache();
 		start();
 		calcula_histograma( total_pixels , number_threads );
 		mark_time(1);
@@ -123,7 +129,7 @@ int main (int argc, char *argv[]) {
 		transforma_imagem( total_pixels , number_threads );
 		mark_time(3);
 		stop();
-		writeResults(number_threads);
+		writeResults(number_threads , node_name );
 		return 0;
 	}
 	else {
