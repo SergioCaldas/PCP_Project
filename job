@@ -44,7 +44,7 @@ read -r node_info<$PBS_NODEFILE
 echo "Allocated computing node: $node_info"
 
 max_ppn=32
-sample_size=30
+sample_size=10
 max_matrix=8192
 
 for (( matrix_size=4096;matrix_size <= $max_matrix; matrix_size+=matrix_size  ))
