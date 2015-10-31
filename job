@@ -43,8 +43,8 @@ read -r node_info<$PBS_NODEFILE
 
 echo "Allocated computing node: $node_info"
 
-max_ppn=0
-sample_size=50
+max_ppn=12
+sample_size=5
 max_matrix=8192
 
 for (( matrix_size=2048;matrix_size <= $max_matrix; matrix_size+=matrix_size  ))
@@ -62,7 +62,9 @@ do
 	for (( sample_num=1; sample_num <= $sample_size; ++sample_num ))
 	do 
 		./bin/pcp_tp1_par $i $matrix_size $matrix_size $node_info
-	done
+		./bin/pcp_tp1_par_loop_4 $i $matrix_size $matrix_size "loop4"
+		./bin/pcp_tp1_par_loop_8 $i $matrix_size $matrix_size "loop8"
+done
 done
 done
 echo "Done..."
