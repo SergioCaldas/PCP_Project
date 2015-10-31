@@ -6,7 +6,9 @@
 
 SHELL = /bin/sh
 
-PAR_4 = par_reducao
+PAR_NOWAIT = par_sem_nowait
+PAR_SCHEDULLE = par_sem_schedulle
+
 PAR = par
 CXX = g++
 LD  = g++
@@ -15,7 +17,8 @@ SEQ = seq
 BIN = bin
 BIN_SEQ = pcp_tp1_seq
 BIN_PAR = pcp_tp1_par
-BIN_PAR_4 = pcp_tp1_par_reduce
+BIN_PAR_NOWAIT = pcp_tp1_par_sem_nowait
+BIN_PAR_SCHEDULLE = pcp_tp1_par_sem_schedulle
 
 CXXFLAGS   = -O3 -Wall -Wextra -std=c++11 -fopenmp
 
@@ -48,8 +51,11 @@ $(BIN_DIR)/$(BIN_SEQ): $(BUILD_DIR)/$(SEQ).o $(BUILD_DIR)/$(SEQ).d
 $(BIN_DIR)/$(BIN_PAR): $(BUILD_DIR)/$(PAR).o $(BUILD_DIR)/$(PAR).d 
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $(BUILD_DIR)/$(PAR).o 
 
-$(BIN_DIR)/$(BIN_PAR_4): $(BUILD_DIR)/$(PAR_4).o $(BUILD_DIR)/$(PAR_4).d 
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $(BUILD_DIR)/$(PAR_4).o 
+$(BIN_DIR)/$(BIN_PAR_SCHEDULLE): $(BUILD_DIR)/$(PAR_SCHEDULLE).o $(BUILD_DIR)/$(PAR_SCHEDULLE).d 
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $(BUILD_DIR)/$(PAR_SCHEDULLE).o 
+
+$(BIN_DIR)/$(BIN_PAR_NOWAIT): $(BUILD_DIR)/$(PAR_NOWAIT).o $(BUILD_DIR)/$(PAR_NOWAIT).d 
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $@ $(BUILD_DIR)/$(PAR_NOWAIT).o 
 
 checkdirs:
 	@mkdir -p build 
@@ -57,7 +63,7 @@ checkdirs:
 	@mkdir -p timing
 	@mkdir -p bin
 
-all: checkdirs  $(BIN_DIR)/$(BIN_SEQ) $(BIN_DIR)/$(BIN_PAR) $(BIN_DIR)/$(BIN_PAR_4) 
+all: checkdirs  $(BIN_DIR)/$(BIN_SEQ) $(BIN_DIR)/$(BIN_PAR) $(BIN_DIR)/$(BIN_PAR_SCHEDULLE)  $(BIN_DIR)/$(BIN_PAR_NOWAIT) 
 
 clean:
 	rm -f $(BUILD_DIR)/* $(BIN_DIR)/* 	
