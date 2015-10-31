@@ -30,20 +30,11 @@
 
 #PBS -l nodes=1:ppn=48
 
-module purge
-module load gnu/4.9.0
-   
-echo "Done Loading Modules..."
-
-cd PCP_Project
-make clean
-make
-
 read -r node_info<$PBS_NODEFILE
 
 echo "Allocated computing node: $node_info"
 
-max_ppn=24
+max_ppn=8
 sample_size=10
 max_matrix=8192
 
