@@ -56,14 +56,13 @@ do
 	./bin/pcp_tp1_seq $matrix_size $matrix_size $node_info
 done
 
-for (( i=1; i <= $max_ppn; ++i ))
+for (( i=2; i <= $max_ppn; i+=2 ))
 do
 	echo "Running $sample_size * ( $i threads parallel code)"
 	for (( sample_num=1; sample_num <= $sample_size; ++sample_num ))
 	do 
 		./bin/pcp_tp1_par $i $matrix_size $matrix_size $node_info
-		./bin/pcp_tp1_par_loop_4 $i $matrix_size $matrix_size "loop4"
-		./bin/pcp_tp1_par_loop_8 $i $matrix_size $matrix_size "loop8"
+		./bin/pcp_tp1_par_critical $i $matrix_size $matrix_size "critical"
 done
 done
 done
