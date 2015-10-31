@@ -1,4 +1,4 @@
-#include <omp.h>
+#include "omp.h"
 #include <cstdlib>
 #include <sys/time.h>
 #include <iostream>
