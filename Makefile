@@ -6,7 +6,7 @@
 
 SHELL = /bin/sh
 
-PAR_4 = par_atomic
+PAR_4 = par_reducao
 PAR = par
 CXX = g++
 LD  = g++
@@ -15,7 +15,7 @@ SEQ = seq
 BIN = bin
 BIN_SEQ = pcp_tp1_seq
 BIN_PAR = pcp_tp1_par
-BIN_PAR_4 = pcp_tp1_par_atomic
+BIN_PAR_4 = pcp_tp1_par_reduce
 
 CXXFLAGS   = -O3 -Wall -Wextra -std=c++11 -fopenmp
 
