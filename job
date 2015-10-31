@@ -61,8 +61,8 @@ do
 	echo "Running $sample_size * ( $i threads parallel code)"
 	for (( sample_num=1; sample_num <= $sample_size; ++sample_num ))
 	do 
-		./bin/pcp_tp1_par $i $matrix_size $matrix_size $node_info
-		./bin/pcp_tp1_par_critical $i $matrix_size $matrix_size "critical"
+#		./bin/pcp_tp1_par $i $matrix_size $matrix_size $node_info
+		./bin/pcp_tp1_par_atomic $i $matrix_size $matrix_size "atomic"
 done
 done
 done
