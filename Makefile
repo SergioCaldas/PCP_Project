@@ -8,8 +8,8 @@ SHELL = /bin/sh
 
 PAR_4 = par_reducao
 PAR = par
-CXX = g++-4.9
-LD  = g++-4.9
+CXX = g++-5
+LD  = g++-5
 
 SEQ = seq
 BIN = bin
